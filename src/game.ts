@@ -9,39 +9,42 @@ export default class Demo extends Phaser.Scene
 
     preload ()
     {
-        this.load.image('logo', 'assets/phaser3-logo.png');
-        this.load.image('libs', 'assets/libs.png');
-        this.load.glsl('bundle', 'assets/plasma-bundle.glsl.js');
-        this.load.glsl('stars', 'assets/starfields.glsl.js');
+        this.load.spritesheet('ball', 'assets/sprites/balls.png', {frameWidth: 17, frameHeight: 17})
     }
 
     create ()
     {
-        this.add.shader('RGB Shift Field', 0, 0, 800, 600).setOrigin(0);
+        this.cameras.main.centerOn(0, 0);
 
-        this.add.shader('Plasma', 0, 412, 800, 172).setOrigin(0);
+        this.physics.add.
+        const balls = this.physics.add.group({defaultKey: 'ball', bounceX: 0, bounceY: 0});
+        balls.defaults.setVelocityY = 50;
+        balls.defaults.setGravityX = 0;
+        balls.defaults.setGravityY = 0;
 
-        this.add.image(400, 300, 'libs');
-
-        const logo = this.add.image(400, 70, 'logo');
-
-        this.tweens.add({
-            targets: logo,
-            y: 350,
-            duration: 1500,
-            ease: 'Sine.inOut',
-            yoyo: true,
-            repeat: -1
+        let created = balls.createMultiple({
+            quantity: 3,
+            key: balls.defaultKey,
+            frame: 2
         })
+
+        const triangle: Phaser.Geom.Triangle = new Phaser.Geom.Triangle(0,17,8.5,0,17,17);
+        Phaser.Actions.PlaceOnTriangle(created,triangle);
     }
 }
 
 const config = {
     type: Phaser.AUTO,
-    backgroundColor: '#125555',
-    width: 800,
-    height: 600,
-    scene: Demo
+    backgroundColor: '#222222',
+    width: 1024,
+    height: 768,
+    scene: Demo,
+    physics: {
+        default: 'arcade',
+        arcade: {
+            debug: false
+        }
+    },
 };
 
 const game = new Phaser.Game(config);
